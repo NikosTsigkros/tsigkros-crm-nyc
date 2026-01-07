@@ -31,3 +31,14 @@ class Customer(db.Model):
     interactions = db.relationship(
         "Interaction", back_populates="customer", cascade="all, delete-orphan"
     )
+
+class Interaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    contact_date = db.Column(db.DateTime, default=datetime.utcnow)
+    notes = db.Column(db.Text)
+    no_response = db.Column(db.Boolean, default=False)
+
+    customer = db.relationship("Customer", back_populates="interactions")
+    user = db.relationship("User", back_populates="interactions")
