@@ -1,7 +1,12 @@
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+import os
 
 db = SQLAlchemy()
+login_manager = LoginManager()
+login_manager.login_view = "crm.login"
 
 ROLE_EMPLOYEE = "employee"
 ROLE_MANAGER = "manager"
@@ -19,6 +24,7 @@ def create_app() -> Flask:
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
+    login_manager.init_app(app)
 
     from .api import api_bp
     from .routes import web_bp
