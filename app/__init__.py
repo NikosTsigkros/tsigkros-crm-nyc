@@ -25,4 +25,24 @@ def create_app() -> Flask:
 
     app.register_blueprint(web_bp)
     app.register_blueprint(api_bp)
+
+    with app.app_context():
+        db.create_all()
+        _seed_admin_user()
     return app
+
+def _seed_admin_user():
+    from .models import User
+
+    if User.query.first():
+        return
+    username = os.getenv("CRM_ADMIN_USERNAME", "admin")
+    password = os.getenv("CRM_ADMIN_PASSWORD", "admin123")
+    admin = User(
+        username=username,
+        role=ROLE_ADMIN,
+        active=True,
+        password_hash=generate_password_hash(password),
+    )
+    db.session.add(admin)
+    db.session.commit()
