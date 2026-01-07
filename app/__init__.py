@@ -26,6 +26,7 @@ def create_app() -> Flask:
     db.init_app(app)
     login_manager.init_app(app)
 
+    from . import models
     from .api import api_bp
     from .routes import web_bp
 
@@ -52,3 +53,9 @@ def _seed_admin_user():
     )
     db.session.add(admin)
     db.session.commit()
+
+@login_manager.user_loader
+def load_user(user_id):
+    from .models import User
+
+    return User.query.get(int(user_id))
