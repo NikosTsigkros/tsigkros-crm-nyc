@@ -1,8 +1,10 @@
 
+{% extends 'base.html' %}
+{% block content %}
 <section class="auth-card" aria-labelledby="login-title">
   <h1 id="login-title">Sign in</h1>
   <p class="muted">Use your assigned credentials to access the CRM.</p>
-  <form method="post" class="form-grid" novalidate>
+  <form method="post" action="{{ url_for('api.login') }}" class="form-grid" novalidate>
     <label>
       <span>Username</span>
       <input type="text" name="username" required autocomplete="username">
@@ -15,3 +17,4 @@
   </form>
   <div class="hint">Default admin: admin / admin123</div>
 </section>
+{% endblock %}
