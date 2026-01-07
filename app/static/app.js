@@ -4,7 +4,7 @@ const result = document.getElementById("result");
 if (button && result) {
   button.addEventListener("click", async () => {
     try {
-      const response = await fetch("/test");
+      const response = await fetch("/api/ping");
       const data = await response.json();
       result.textContent = data.message;
     } catch (error) {
