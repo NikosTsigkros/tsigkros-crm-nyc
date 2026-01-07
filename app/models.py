@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask_login import UserMixin
 from . import db
 
 
@@ -15,3 +16,18 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.id)
+
+class Customer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150))
+    phone = db.Column(db.String(50))
+    category = db.Column(db.String(20), nullable=False)
+    active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    created_by_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    created_by = db.relationship("User", back_populates="customers")
+    interactions = db.relationship(
+        "Interaction", back_populates="customer", cascade="all, delete-orphan"
+    )
