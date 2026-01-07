@@ -6,7 +6,7 @@ import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = "crm.login"
+login_manager.login_view = "web.login"
 
 ROLE_EMPLOYEE = "employee"
 ROLE_MANAGER = "manager"
