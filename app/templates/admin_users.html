@@ -9,7 +9,7 @@
 
 <section class="panel">
   <h2>Create user</h2>
-  <form class="form-grid" method="post" action="{{ url_for('web.admin_user_new') }}">
+  <form class="form-grid" method="post" action="{{ url_for('api.admin_user_new') }}">
     <label>
       <span>Username</span>
       <input type="text" name="username" required>
@@ -63,7 +63,7 @@
                   <input type="checkbox" name="active" {% if user.active %}checked{% endif %} aria-label="Active status for {{ user.username }}" form="{{ form_id }}">
               </td>
               <td>
-                  <form id="{{ form_id }}" method="post" action="{{ url_for('web.admin_user_edit', user_id=user.id) }}" class="inline-form">
+                  <form id="{{ form_id }}" method="post" action="{{ url_for('api.admin_user_edit', user_id=user.id) }}" class="inline-form">
                     <input type="password" name="password" placeholder="Reset password" aria-label="Reset password for {{ user.username }}">
                     <button class="ghost" type="submit">Save</button>
                   </form>
