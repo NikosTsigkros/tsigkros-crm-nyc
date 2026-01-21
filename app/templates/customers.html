@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1>Customers</h1>
+    <p class="muted">Search, update, and track every account.</p>
+  </div>
+  <a class="primary" href="{{ url_for('web.customer_new') }}">Add customer</a>
+</section>
+
+<section class="panel">
+  <div class="filter-bar">
+    <label>
+      <span>Search</span>
+      <input type="search" placeholder="Search by name, email, phone" data-table-filter>
+    </label>
+  </div>
+  <div class="table-wrap">
+    <table class="table" data-filter-table>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for customer in customers %}
+          <tr>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.category }}</td>
+            <td>{{ customer.email or '-' }}</td>
+            <td>{{ customer.phone or '-' }}</td>
+            <td>
+              {% if customer.active %}
+                <span class="status active">Active</span>
+              {% else %}
+                <span class="status inactive">Disabled</span>
+              {% endif %}
+            </td>
+            <td class="row-actions">
+              <a class="ghost" href="{{ url_for('web.customer_detail', customer_id=customer.id) }}">View</a>
+              <a class="ghost" href="{{ url_for('web.customer_edit', customer_id=customer.id) }}">Edit</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
