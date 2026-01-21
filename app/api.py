@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import current_user, login_required, login_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.constants import CUSTOMER_CATEGORIES
+from app.constants import CUSTOMER_CATEGORIES, ROLE_ADMIN, ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_OPTIONS
+from app.utils import role_required
 
 from .models import Customer, User
 from . import db
@@ -47,3 +48,28 @@ def customer_new():
         db.session.commit()
         flash("Customer created.", "success")
         return redirect(url_for("crm.customers"))
+    
+@api_bp.route("/admin/users/new", methods=["POST"])
+@login_required
+@role_required(ROLE_ADMIN)
+def admin_user_new():
+    username = request.form.get("username", "").strip()
+    role = request.form.get("role", ROLE_EMPLOYEE)
+    password = request.form.get("password", "")
+    if not username or not password:
+        flash("Username and password required.", "error")
+    elif role not in ROLE_OPTIONS:
+        flash("Invalid role.", "error")
+    elif User.query.filter_by(username=username).first():
+        flash("Username already exists.", "error")
+    else:
+        user = User(
+            username=username,
+            role=role,
+            active=True,
+            password_hash=generate_password_hash(password),
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash("User created.", "success")
+    return redirect(url_for("crm.admin_users"))
