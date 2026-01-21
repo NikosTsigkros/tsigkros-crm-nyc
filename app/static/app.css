@@ -1,45 +1,110 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:wght@400;600&display=swap");
+
 :root {
-  color-scheme: light;
-  font-family: "Georgia", "Times New Roman", serif;
+  --bg: #f5f1ea;
+  --surface: #ffffff;
+  --ink: #1d1b16;
+  --muted: #5e5a52;
+  --accent: #d86241;
+  --accent-dark: #b0472a;
+  --accent-soft: #f7d4c4;
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #f5f1e8;
-  color: #2b2a2a;
+  font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top left, #f0dbc6, transparent 60%),
+    radial-gradient(circle at 20% 20%, #f8f1e6, transparent 45%),
+    var(--bg);
+  min-height: 100vh;
 }
 
-.page {
-  max-width: 640px;
-  margin: 15vh auto 0;
-  padding: 32px;
-  background: #fffaf0;
-  border: 1px solid #d9cfbd;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  text-align: center;
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 16px;
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: top 0.2s ease;
 }
 
-h1 {
-  margin: 0 0 12px;
-  font-size: 2.25rem;
+.skip-link:focus {
+  top: 12px;
 }
 
-p {
-  margin: 0 0 16px;
-  line-height: 1.5;
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px clamp(16px, 4vw, 56px);
+  gap: 24px;
 }
 
-button {
-  padding: 10px 18px;
-  border-radius: 999px;
-  border: 1px solid #2b2a2a;
-  background: #f8d88c;
-  cursor: pointer;
-  font-weight: 600;
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.result {
-  min-height: 1.5rem;
-  color: #645b4a;
+.logo {
+  font-family: "Newsreader", "Georgia", serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+}
+
+.tag {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.nav a:hover,
+.nav a:focus {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.nav .ghost {
+  border: 1px solid #d7c9b9;
+}
+
+.main {
+  padding: 0 clamp(16px, 4vw, 56px) 48px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
 }
