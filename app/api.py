@@ -20,4 +20,3 @@ def login():
         login_user(user)
         return redirect(url_for("crm.index"))
     flash("Invalid credentials or inactive account.", "error")
-
