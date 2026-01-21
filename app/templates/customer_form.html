@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1>{% if customer %}Edit customer{% else %}New customer{% endif %}</h1>
+    <p class="muted">Keep customer records accurate and up to date.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <form class="form-grid" method="post">
+    <label>
+      <span>Name</span>
+      <input type="text" name="name" required value="{{ customer.name if customer }}">
+    </label>
+    <label>
+      <span>Email</span>
+      <input type="email" name="email" value="{{ customer.email if customer }}">
+    </label>
+    <label>
+      <span>Phone</span>
+      <input type="text" name="phone" value="{{ customer.phone if customer }}">
+    </label>
+    <label>
+      <span>Category</span>
+      <select name="category" required>
+        {% for category in categories %}
+          <option value="{{ category }}" {% if customer and customer.category == category %}selected{% endif %}>
+            {{ category }}
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    {% if customer %}
+      <label class="checkbox">
+        <input type="checkbox" name="active" {% if customer.active %}checked{% endif %}>
+        <span>Active</span>
+      </label>
+    {% endif %}
+    <button class="primary" type="submit">Save</button>
+  </form>
+</section>
+{% endblock %}

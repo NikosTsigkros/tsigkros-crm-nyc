@@ -26,7 +26,9 @@ def redirect_by_role():
 @web_bp.route("/")
 @login_required
 def index():
-    return redirect_by_role()
+    if current_user.is_authenticated:
+        return redirect_by_role()
+    return redirect(url_for("web.login"))
 
 @web_bp.route("/login")
 def login():
@@ -53,9 +55,20 @@ def customers():
         categories=CUSTOMER_CATEGORIES,
     )
 
+@web_bp.route("/admin")
+@login_required
+@role_required(ROLE_ADMIN)
+def admin_dashboard():
+    return redirect(url_for("web.admin_users"))
+
 @web_bp.route("/admin/users")
 @login_required
 @role_required(ROLE_ADMIN)
 def admin_users():
     users = User.query.order_by(User.created_at.desc()).all()
     return render_template("admin_users.html", users=users, roles=ROLE_OPTIONS)
+
+@web_bp.route("/customers/new", methods=["GET"])
+@login_required
+def customer_new():
+    return render_template("customer_form.html", categories=CUSTOMER_CATEGORIES)
