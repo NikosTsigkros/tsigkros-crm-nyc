@@ -1,8 +1,9 @@
 from flask import Blueprint, redirect, render_template, url_for
 from flask_login import current_user, login_required, logout_user
 
-from app.constants import CUSTOMER_CATEGORIES, ROLE_EMPLOYEE
-from app.models import Customer
+from app.constants import CUSTOMER_CATEGORIES, ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_OPTIONS
+from app.models import Customer, User
+from app.utils import role_required
 
 web_bp = Blueprint("web", __name__)
 
@@ -34,3 +35,10 @@ def customers():
         customers=customers_list,
         categories=CUSTOMER_CATEGORIES,
     )
+
+@web_bp.route("/admin/users")
+@login_required
+@role_required(ROLE_ADMIN)
+def admin_users():
+    users = User.query.order_by(User.created_at.desc()).all()
+    return render_template("admin_users.html", users=users, roles=ROLE_OPTIONS)
