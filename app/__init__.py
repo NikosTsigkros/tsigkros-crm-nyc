@@ -4,15 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 import os
 
+from .constants import ROLE_ADMIN
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "web.login"
-
-ROLE_EMPLOYEE = "employee"
-ROLE_MANAGER = "manager"
-ROLE_ADMIN = "admin"
-ROLE_OPTIONS = [ROLE_EMPLOYEE, ROLE_MANAGER, ROLE_ADMIN]
-CUSTOMER_CATEGORIES = ["Lead", "Active", "Inactive", "Cancelled"]
 
 def create_app() -> Flask:
     app = Flask(__name__)
