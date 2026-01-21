@@ -15,12 +15,12 @@
     </div>
     {% if current_user.is_authenticated %}
       <nav class="nav" aria-label="Primary">
-        <a href="{{ url_for('crm.index') }}">Dashboard</a>
-        <a href="{{ url_for('crm.customers') }}">Customers</a>
+        <a href="{{ url_for('web.index') }}">Dashboard</a>
+        <a href="{{ url_for('web.customers') }}">Customers</a>
         {% if current_user.role == 'admin' %}
-          <a href="{{ url_for('crm.admin_users') }}">Users</a>
+          <a href="{{ url_for('web.admin_users') }}">Users</a>
         {% endif %}
-        <a href="{{ url_for('crm.logout') }}" class="ghost">Sign out</a>
+        <a href="{{ url_for('web.logout') }}" class="ghost">Sign out</a>
       </nav>
     {% endif %}
   </header>

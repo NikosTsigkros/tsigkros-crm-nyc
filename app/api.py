@@ -18,5 +18,5 @@ def login():
     user = User.query.filter_by(username=username).first()
     if user and user.active and check_password_hash(user.password_hash, password):
         login_user(user)
-        return redirect(url_for("crm.index"))
+        return redirect(url_for("web.index"))
     flash("Invalid credentials or inactive account.", "error")
