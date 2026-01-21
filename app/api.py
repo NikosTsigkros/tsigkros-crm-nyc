@@ -72,4 +72,26 @@ def admin_user_new():
         db.session.add(user)
         db.session.commit()
         flash("User created.", "success")
+    return redirect(url_for("web.admin_users"))
+
+@api_bp.route("/admin/users/<int:user_id>/edit", methods=["POST"])
+@login_required
+@role_required(ROLE_ADMIN)
+def admin_user_edit(user_id):
+    user = User.query.get_or_404(user_id)
+    if user.id == current_user.id:
+        flash("You cannot edit your own role or status.", "error")
+        return redirect(url_for("crm.admin_users"))
+    role = request.form.get("role", user.role)
+    active = request.form.get("active") == "on"
+    password = request.form.get("password")
+    if role not in ROLE_OPTIONS:
+        flash("Invalid role.", "error")
+    else:
+        user.role = role
+        user.active = active
+        if password:
+            user.password_hash = generate_password_hash(password)
+        db.session.commit()
+        flash("User updated.", "success")
     return redirect(url_for("crm.admin_users"))
