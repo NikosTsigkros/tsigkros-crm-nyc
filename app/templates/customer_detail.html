@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1>{{ customer.name }}</h1>
+    <p class="muted">Category: {{ customer.category }} · Status: {% if customer.active %}Active{% else %}Disabled{% endif %}</p>
+  </div>
+  <div class="actions">
+    <a class="ghost" href="{{ url_for('web.customer_edit', customer_id=customer.id) }}">Edit</a>
+    {% if customer.active %}
+      <form method="post" action="{{ url_for('api.customer_disable', customer_id=customer.id) }}">
+        <button class="danger" type="submit">Disable</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Contact information</h2>
+  <div class="info-grid">
+    <div>
+      <span class="label">Email</span>
+      <p>{{ customer.email or '-' }}</p>
+    </div>
+    <div>
+      <span class="label">Phone</span>
+      <p>{{ customer.phone or '-' }}</p>
+    </div>
+    <div>
+      <span class="label">Created</span>
+      <p>{{ customer.created_at.strftime('%Y-%m-%d') }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Log new interaction</h2>
+  <form class="form-grid" method="post" action="{{ url_for('api.interaction_new', customer_id=customer.id) }}">
+    <label>
+      <span>Interaction notes</span>
+      <textarea name="notes" rows="4" placeholder="Summary of the outreach"></textarea>
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" name="no_response">
+      <span>No response from customer</span>
+    </label>
+    <button class="primary" type="submit">Save interaction</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>Interaction history</h2>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Employee</th>
+          <th scope="col">No response</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for interaction in interactions %}
+          <tr>
+            <td>{{ interaction.contact_date.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ interaction.user.username }}</td>
+            <td>{{ 'Yes' if interaction.no_response else 'No' }}</td>
+            <td>{{ interaction.notes or '-' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
