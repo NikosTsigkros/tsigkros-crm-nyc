@@ -1,5 +1,5 @@
 from os import abort
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, logout_user
 
 from app.constants import (
@@ -10,7 +10,7 @@ from app.constants import (
     ROLE_OPTIONS,
 )
 from app.models import Customer, Interaction, User
-from app.utils import role_required
+from app.utils import _ensure_customer_access, role_required
 
 web_bp = Blueprint("web", __name__)
 
@@ -89,6 +89,13 @@ def customer_detail(customer_id):
         interactions=interactions,
     )
 
-def _ensure_customer_access(customer):
-    if current_user.role == ROLE_EMPLOYEE and customer.created_by_id != current_user.id:
-        abort(403)
+@web_bp.route("/customers/<int:customer_id>/edit", methods=["GET"])
+@login_required
+def customer_edit(customer_id):
+    customer = Customer.query.get_or_404(customer_id)
+    _ensure_customer_access(customer)
+    return render_template(
+        "customer_form.html",
+        customer=customer,
+        categories=CUSTOMER_CATEGORIES,
+    )
