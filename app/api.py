@@ -118,4 +118,4 @@ def customer_edit(customer_id):
         customer.active = active
         db.session.commit()
         flash("Customer updated.", "success")
-        return redirect(url_for("crm.customer_detail", customer_id=customer.id))
+        return redirect(url_for("web.customer_detail", customer_id=customer.id))
