@@ -9,7 +9,7 @@ from app.constants import (
     ROLE_MANAGER,
     ROLE_OPTIONS,
 )
-from app.models import Customer, User
+from app.models import Customer, Interaction, User
 from app.utils import role_required
 
 web_bp = Blueprint("web", __name__)
@@ -72,3 +72,23 @@ def admin_users():
 @login_required
 def customer_new():
     return render_template("customer_form.html", categories=CUSTOMER_CATEGORIES)
+
+@web_bp.route("/customers/<int:customer_id>")
+@login_required
+def customer_detail(customer_id):
+    customer = Customer.query.get_or_404(customer_id)
+    _ensure_customer_access(customer)
+    interactions = (
+        Interaction.query.filter_by(customer_id=customer.id)
+        .order_by(Interaction.contact_date.desc())
+        .all()
+    )
+    return render_template(
+        "customer_detail.html",
+        customer=customer,
+        interactions=interactions,
+    )
+
+def _ensure_customer_access(customer):
+    if current_user.role == ROLE_EMPLOYEE and customer.created_by_id != current_user.id:
+        abort(403)
