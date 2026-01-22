@@ -3,7 +3,7 @@ from flask_login import current_user, login_required, login_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.constants import CUSTOMER_CATEGORIES, ROLE_ADMIN, ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_OPTIONS
-from app.utils import role_required
+from app.utils import _ensure_customer_access, role_required
 
 from .models import Customer, User
 from . import db
@@ -95,3 +95,27 @@ def admin_user_edit(user_id):
         db.session.commit()
         flash("User updated.", "success")
     return redirect(url_for("web.admin_users"))
+
+@api_bp.route("/customers/<int:customer_id>/edit", methods=["POST"])
+@login_required
+def customer_edit(customer_id):
+    customer = Customer.query.get_or_404(customer_id)
+    _ensure_customer_access(customer)
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip()
+    phone = request.form.get("phone", "").strip()
+    category = request.form.get("category", customer.category)
+    active = request.form.get("active") == "on"
+    if not name:
+        flash("Name is required.", "error")
+    elif category not in CUSTOMER_CATEGORIES:
+        flash("Invalid category.", "error")
+    else:
+        customer.name = name
+        customer.email = email
+        customer.phone = phone
+        customer.category = category
+        customer.active = active
+        db.session.commit()
+        flash("Customer updated.", "success")
+        return redirect(url_for("crm.customer_detail", customer_id=customer.id))
