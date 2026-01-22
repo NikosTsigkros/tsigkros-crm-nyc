@@ -47,7 +47,7 @@ def customer_new():
         db.session.add(customer)
         db.session.commit()
         flash("Customer created.", "success")
-        return redirect(url_for("crm.customers"))
+        return redirect(url_for("web.customers"))
     
 @api_bp.route("/admin/users/new", methods=["POST"])
 @login_required
@@ -81,7 +81,7 @@ def admin_user_edit(user_id):
     user = User.query.get_or_404(user_id)
     if user.id == current_user.id:
         flash("You cannot edit your own role or status.", "error")
-        return redirect(url_for("crm.admin_users"))
+        return redirect(url_for("web.admin_users"))
     role = request.form.get("role", user.role)
     active = request.form.get("active") == "on"
     password = request.form.get("password")
@@ -94,4 +94,4 @@ def admin_user_edit(user_id):
             user.password_hash = generate_password_hash(password)
         db.session.commit()
         flash("User updated.", "success")
-    return redirect(url_for("crm.admin_users"))
+    return redirect(url_for("web.admin_users"))
