@@ -119,3 +119,13 @@ def customer_edit(customer_id):
         db.session.commit()
         flash("Customer updated.", "success")
         return redirect(url_for("web.customer_detail", customer_id=customer.id))
+    
+@api_bp.route("/customers/<int:customer_id>/disable", methods=["POST"])
+@login_required
+def customer_disable(customer_id):
+    customer = Customer.query.get_or_404(customer_id)
+    _ensure_customer_access(customer)
+    customer.active = False
+    db.session.commit()
+    flash("Customer disabled.", "success")
+    return redirect(url_for("web.customers"))
