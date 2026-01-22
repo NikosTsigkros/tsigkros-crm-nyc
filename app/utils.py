@@ -2,6 +2,8 @@ from functools import wraps
 from flask_login import current_user, login_manager
 from flask import abort
 
+from app.constants import ROLE_EMPLOYEE
+
 def role_required(*roles):
     def decorator(func):
         @wraps(func)
@@ -17,3 +19,7 @@ def role_required(*roles):
         return wrapper
 
     return decorator
+
+def _ensure_customer_access(customer):
+    if current_user.role == ROLE_EMPLOYEE and customer.created_by_id != current_user.id:
+        abort(403)
