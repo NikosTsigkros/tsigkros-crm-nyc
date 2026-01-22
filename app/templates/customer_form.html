@@ -8,7 +8,12 @@
 </section>
 
 <section class="panel">
-  <form class="form-grid" method="post" action="/api/customers/new">
+  {% if customer %}
+    {% set form_action = "/api/customers/{}/edit".format(customer.id) %}
+  {% else %}
+    {% set form_action = "/api/customers/new" %}
+  {% endif %}
+  <form class="form-grid" method="post" action="{{ form_action }}">
     <label>
       <span>Name</span>
       <input type="text" name="name" required value="{{ customer.name if customer }}">
