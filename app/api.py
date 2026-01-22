@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import current_user, login_required, login_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -5,7 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.constants import CUSTOMER_CATEGORIES, ROLE_ADMIN, ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_OPTIONS
 from app.utils import _ensure_customer_access, role_required
 
-from .models import Customer, User
+from .models import Customer, Interaction, User
 from . import db
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
@@ -129,3 +130,22 @@ def customer_disable(customer_id):
     db.session.commit()
     flash("Customer disabled.", "success")
     return redirect(url_for("web.customers"))
+
+@api_bp.route("/customers/<int:customer_id>/interactions/new", methods=["POST"])
+@login_required
+def interaction_new(customer_id):
+    customer = Customer.query.get_or_404(customer_id)
+    _ensure_customer_access(customer)
+    notes = request.form.get("notes", "").strip()
+    no_response = request.form.get("no_response") == "on"
+    interaction = Interaction(
+        customer_id=customer.id,
+        user_id=current_user.id,
+        notes=notes,
+        no_response=no_response,
+        contact_date=datetime.utcnow(),
+    )
+    db.session.add(interaction)
+    db.session.commit()
+    flash("Interaction logged.", "success")
+    return redirect(url_for("web.customer_detail", customer_id=customer.id))
