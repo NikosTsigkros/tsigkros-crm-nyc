@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1>Manager Dashboard</h1>
+    <p class="muted">Review team performance and customer health.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <form class="filter-bar" data-manager-filters>
+    <label>
+      <span>Look back (days)</span>
+      <input type="number" min="1" max="365" name="days" value="30">
+    </label>
+    <label>
+      <span>Review last N contacts</span>
+      <input type="number" min="1" max="20" name="noResponseN" value="5">
+    </label>
+    <button class="primary" type="submit">Refresh</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>Contacts per employee</h2>
+  <div class="table-wrap">
+    <table class="table" data-manager-contacts>
+      <thead>
+        <tr>
+          <th scope="col">Employee</th>
+          <th scope="col">Contacts</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Customers without recent contact</h2>
+  <div class="table-wrap">
+    <table class="table" data-manager-inactive>
+      <thead>
+        <tr>
+          <th scope="col">Customer</th>
+          <th scope="col">Last contact</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Consistent non-responders</h2>
+  <div class="table-wrap">
+    <table class="table" data-manager-noresponse>
+      <thead>
+        <tr>
+          <th scope="col">Customer</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Customers by category (new in period)</h2>
+  <div class="pill-row" data-manager-categories></div>
+</section>
+{% endblock %}
