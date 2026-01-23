@@ -67,6 +67,12 @@ def admin_dashboard():
 def manager_dashboard():
     return render_template("manager_dashboard.html")
 
+@web_bp.route("/employee")
+@login_required
+@role_required(ROLE_EMPLOYEE)
+def employee_dashboard():
+    return render_template("employee_dashboard.html", categories=CUSTOMER_CATEGORIES)
+
 @web_bp.route("/admin/users")
 @login_required
 @role_required(ROLE_ADMIN)
