@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1>Employee Dashboard</h1>
+    <p class="muted">Track your outreach and update customer interactions.</p>
+  </div>
+  <a class="primary" href="{{ url_for('web.customer_new') }}">Add customer</a>
+</section>
+
+<section class="stats-grid" data-employee-stats>
+  <article class="stat-card">
+    <h2>Customers added</h2>
+    <p class="stat" data-stat="customersAdded">0</p>
+  </article>
+  <article class="stat-card">
+    <h2>Contacts last 24h</h2>
+    <p class="stat" data-stat="contactsLastDay">0</p>
+  </article>
+  <article class="stat-card">
+    <h2>Contacts last 7 days</h2>
+    <p class="stat" data-stat="contactsLastWeek">0</p>
+  </article>
+  <article class="stat-card">
+    <h2>Contacts last 30 days</h2>
+    <p class="stat" data-stat="contactsLastMonth">0</p>
+  </article>
+</section>
+
+<section class="panel">
+  <h2>Quick actions</h2>
+  <div class="actions">
+    <a class="ghost" href="{{ url_for('web.customers') }}">View my customers</a>
+    <a class="ghost" href="{{ url_for('web.customer_new') }}">Create new customer</a>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Customer categories</h2>
+  <p class="muted">Keep every contact categorized to improve reporting.</p>
+  <div class="pill-row">
+    {% for category in categories %}
+      <span class="pill">{{ category }}</span>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
