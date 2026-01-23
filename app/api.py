@@ -171,3 +171,60 @@ def api_employee_stats():
         ).count(),
     }
     return jsonify(stats)
+
+@api_bp.route("/manager/stats")
+@login_required
+@role_required(ROLE_MANAGER)
+def api_manager_stats():
+    days = int(request.args.get("days", 30))
+    days = max(1, min(days, 365))
+    no_response_n = int(request.args.get("no_response_n", 5))
+    no_response_n = max(1, min(no_response_n, 20))
+    since = datetime.utcnow() - timedelta(days=days)
+
+    contacts_per_employee = defaultdict(int)
+    interactions = Interaction.query.filter(Interaction.contact_date >= since).all()
+    for interaction in interactions:
+        contacts_per_employee[interaction.user.username] += 1
+
+    last_contact = (
+        db.session.query(Customer, db.func.max(Interaction.contact_date))
+        .outerjoin(Interaction)
+        .group_by(Customer.id)
+        .all()
+    )
+    inactive_customers = [
+        {
+            "id": customer.id,
+            "name": customer.name,
+            "lastContact": last_date.isoformat() if last_date else "Never",
+        }
+        for customer, last_date in last_contact
+        if not last_date or last_date < since
+    ]
+
+    no_response_customers = []
+    for customer in Customer.query.all():
+        recent = (
+            Interaction.query.filter_by(customer_id=customer.id)
+            .order_by(Interaction.contact_date.desc())
+            .limit(no_response_n)
+            .all()
+        )
+        if recent and all(inter.no_response for inter in recent):
+            no_response_customers.append({"id": customer.id, "name": customer.name})
+
+    category_counts = defaultdict(int)
+    for customer in Customer.query.filter(Customer.created_at >= since).all():
+        category_counts[customer.category] += 1
+
+    response = {
+        "contactsPerEmployee": [
+            {"employee": name, "count": count}
+            for name, count in contacts_per_employee.items()
+        ],
+        "inactiveCustomers": inactive_customers,
+        "noResponseCustomers": no_response_customers,
+        "categoryCounts": category_counts,
+    }
+    return jsonify(response)
