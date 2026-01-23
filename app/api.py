@@ -25,6 +25,7 @@ def login():
         login_user(user)
         return redirect(url_for("web.index"))
     flash("Invalid credentials or inactive account.", "error")
+    return redirect(url_for("web.login"))
 
 @api_bp.route("/customers/new", methods=["POST"])
 @login_required
