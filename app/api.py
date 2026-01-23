@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import current_user, login_required, login_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -150,3 +150,24 @@ def interaction_new(customer_id):
     db.session.commit()
     flash("Interaction logged.", "success")
     return redirect(url_for("web.customer_detail", customer_id=customer.id))
+
+@api_bp.route("/employee/stats")
+@login_required
+@role_required(ROLE_EMPLOYEE)
+def api_employee_stats():
+    now = datetime.utcnow()
+    day = now - timedelta(days=1)
+    week = now - timedelta(days=7)
+    month = now - timedelta(days=30)
+
+    customers_added = Customer.query.filter_by(created_by_id=current_user.id).count()
+    interactions = Interaction.query.filter_by(user_id=current_user.id)
+    stats = {
+        "customersAdded": customers_added,
+        "contactsLastDay": interactions.filter(Interaction.contact_date >= day).count(),
+        "contactsLastWeek": interactions.filter(Interaction.contact_date >= week).count(),
+        "contactsLastMonth": interactions.filter(
+            Interaction.contact_date >= month
+        ).count(),
+    }
+    return jsonify(stats)
