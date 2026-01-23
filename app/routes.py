@@ -61,6 +61,12 @@ def customers():
 def admin_dashboard():
     return redirect(url_for("web.admin_users"))
 
+@web_bp.route("/manager")
+@login_required
+@role_required(ROLE_MANAGER)
+def manager_dashboard():
+    return render_template("manager_dashboard.html")
+
 @web_bp.route("/admin/users")
 @login_required
 @role_required(ROLE_ADMIN)
