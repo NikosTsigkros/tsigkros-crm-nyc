@@ -77,3 +77,47 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+function renderManagerTable(selector, rows, columnCount, mapper) {
+  const tbody = document.querySelector(selector);
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  if (!rows || rows.length === 0) {
+    const emptyRow = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = columnCount;
+    cell.textContent = "No data available";
+    emptyRow.appendChild(cell);
+    tbody.appendChild(emptyRow);
+    return;
+  }
+  rows.forEach((row) => {
+    const tr = document.createElement("tr");
+    mapper(row).forEach((value) => {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function renderCategoryPills(selector, data) {
+  const container = document.querySelector(selector);
+  if (!container) return;
+  container.innerHTML = "";
+  const entries = Object.entries(data || {});
+  if (entries.length === 0) {
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = "No new customers";
+    container.appendChild(pill);
+    return;
+  }
+  entries.forEach(([category, count]) => {
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = `${category}: ${count}`;
+    container.appendChild(pill);
+  });
+}
