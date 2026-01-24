@@ -64,4 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadManagerStats();
   }
+
+  const tableFilter = document.querySelector("[data-table-filter]");
+  if (tableFilter) {
+    const table = document.querySelector("[data-filter-table]");
+    tableFilter.addEventListener("input", () => {
+      const term = tableFilter.value.toLowerCase();
+      table.querySelectorAll("tbody tr").forEach((row) => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? "" : "none";
+      });
+    });
+  }
 });
