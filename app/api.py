@@ -1,9 +1,10 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import current_user, login_required, login_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.constants import CUSTOMER_CATEGORIES, ROLE_ADMIN, ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_OPTIONS
+from app.constants import CUSTOMER_CATEGORIES, ROLE_ADMIN, ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_MANAGER, ROLE_OPTIONS
 from app.utils import _ensure_customer_access, role_required
 
 from .models import Customer, Interaction, User
