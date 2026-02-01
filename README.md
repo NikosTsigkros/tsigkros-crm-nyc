@@ -2,6 +2,8 @@
 
 A lightweight CRM built with Flask. This project was created by Tsigkros Nikolaos for the New York College course \"Web Design and Programming\" (University of Greater Manchester). It combines server-rendered HTML pages with JSON/API endpoints, uses SQLAlchemy for data storage (SQLite by default), and supports role-based access with secure password hashing.
 
+![Preview](/assets//preview.png)
+
 ## Tech Stack
 
 - **Python 3 + Flask**: Web framework and routing
